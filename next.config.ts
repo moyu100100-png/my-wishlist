@@ -1,8 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // suppress turbopack root warning
-  experimental: {},
+  output: 'export',
 };
 
 export default nextConfig;
