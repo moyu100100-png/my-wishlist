@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // suppress turbopack root warning
+  experimental: {},
 };
 
 export default nextConfig;
