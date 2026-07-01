@@ -22,7 +22,7 @@ export default function FilterSheet({open,onClose,current,onApply}:Props){
   },[open,current]);
 
   // Connected filtering: when cats selected, filter brands/colors accordingly
-  const filteredItems=store.getItems().filter(i=>f.cats.length?f.cats.includes(i.cat):true);
+  const filteredItems=store.getItems().filter(i=>f?.cats?.length?f.cats.includes(i.cat):true);
   const availColors=[...new Set(filteredItems.map(i=>i.color))];
   const availBrands=[...new Set(filteredItems.map(i=>i.brand))];
 
