@@ -10,10 +10,11 @@ import SettingsSheet from'./components/SettingsSheet';
 import IconBtn from'./components/IconBtn';
 
 function applyFilter(items:WishItem[],f:FilterState,sort:SortKey):WishItem[]{
+  if(!f)return items;
   let list=[...items];
-  if(f.cats.length)list=list.filter(i=>f.cats.includes(i.cat));
-  if(f.colors.length)list=list.filter(i=>f.colors.includes(i.color));
-  if(f.brands.length)list=list.filter(i=>f.brands.includes(i.brand));
+  if(f.cats?.length)list=list.filter(i=>f.cats.includes(i.cat));
+  if(f.colors?.length)list=list.filter(i=>f.colors.includes(i.color));
+  if(f.brands?.length)list=list.filter(i=>f.brands.includes(i.brand));
   if(f.priceMin!=='')list=list.filter(i=>i.price>=Number(f.priceMin));
   if(f.priceMax!=='')list=list.filter(i=>i.price<=Number(f.priceMax));
   if(f.dateFrom)list=list.filter(i=>i.date>=f.dateFrom);
@@ -51,7 +52,6 @@ export default function WishPage(){
 
   return(
     <div style={{display:'flex',flexDirection:'column',height:'100dvh',background:'var(--bg)'}}>
-      {/* Header row 1 */}
       <header style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'0 16px',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0,position:'sticky',top:0,zIndex:50}}>
         <span style={{fontFamily:'Cormorant Garamond,serif',fontSize:26,fontWeight:400,letterSpacing:'.06em'}}>Wish List</span>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
@@ -61,14 +61,11 @@ export default function WishPage(){
           <IconBtn onClick={()=>setSettingsOpen(true)} label="設定" size={34}><SettingsIcon/></IconBtn>
         </div>
       </header>
-      {/* Header row 2 */}
       <div style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'8px 16px',display:'flex',gap:8,flexShrink:0}}>
         <IconBtn onClick={()=>setFilterOpen(true)} active={hasFilter} label="フィルター" size={52}><FilterIcon/></IconBtn>
         <IconBtn onClick={()=>setSortOpen(true)} label="並び替え" size={52}><SortIcon/></IconBtn>
       </div>
       <div style={{fontSize:11,color:'var(--t3)',padding:'6px 16px 4px',flexShrink:0}}>{displayed.length} items</div>
-
-      {/* Grid */}
       <div style={{flex:1,overflowY:'auto'}}>
         {displayed.length===0?(
           <div style={{textAlign:'center',padding:'60px 20px',color:'var(--t3)'}}><p style={{fontSize:13,lineHeight:2.2}}>アイテムがありません。<br/>+ ボタンで追加しましょう。</p></div>
@@ -100,8 +97,7 @@ export default function WishPage(){
       </div>
       <BottomNav/>
       <button onClick={()=>{setEditItem(null);setAddOpen(true);}} style={{position:'fixed',bottom:76,right:20,width:52,height:52,borderRadius:'50%',background:'var(--brown)',color:'#fff',fontSize:26,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 14px rgba(160,135,106,.4)',zIndex:40,border:'none'}}>+</button>
-
-      <FilterSheet open={filterOpen} onClose={()=>setFilterOpen(false)} current={filter} onApply={f=>{setFilter(f);}}/>
+      <FilterSheet open={filterOpen} onClose={()=>setFilterOpen(false)} current={filter} onApply={f=>{setFilter(f??defaultFilter);}}/>
       <SortSheet open={sortOpen} onClose={()=>setSortOpen(false)} current={sort} onChange={k=>setSort(k)}/>
       <AddItemSheet open={addOpen} onClose={()=>setAddOpen(false)} editItem={editItem} onSave={reload}/>
       <DetailView itemId={detailId} onClose={()=>{setDetailId(null);reload();}} onEdit={item=>{setDetailId(null);setEditItem(item);setAddOpen(true);}} onUpdate={reload} allItems={displayed}/>
