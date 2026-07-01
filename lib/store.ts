@@ -43,5 +43,9 @@ class Store {
   saveColors(c:ColorDef[]){ sv('wj_colors',c); }
   getTheme():Theme{ return ld('wj_theme','ivory'); }
   saveTheme(t:Theme){ sv('wj_theme',t); }
+  getBrands():string[]{
+    const all=[...this.getItems(),...this.getColls()];
+    return [...new Set(all.map(i=>i.brand))].filter(Boolean).sort();
+  }
 }
 export const store = new Store();
