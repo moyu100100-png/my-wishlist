@@ -12,17 +12,14 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
   const[imgIdx,setImgIdx]=useState(0);
   const[puOpen,setPuOpen]=useState(false);const[puPrice,setPuPrice]=useState('');
   const[colOpen,setColOpen]=useState(false);const[cPrice,setCPrice]=useState('');const[cDate,setCDate]=useState('');
-  const[menuOpen,setMenuOpen]=useState(false);
-  const[curIdx,setCurIdx]=useState(0);
+  const[menuOpen,setMenuOpen]=useState(false);const[curIdx,setCurIdx]=useState(0);
   const tx=useRef(0);
-
   useEffect(()=>{
     if(!itemId){setItem(null);return;}
     const idx=allItems.findIndex(i=>i.id===itemId);setCurIdx(idx>=0?idx:0);
     const found=store.getItems().find(i=>i.id===itemId)||store.getColls().find(i=>i.id===itemId);
     setItem(found||null);setImgIdx(0);
   },[itemId]);
-
   function navItem(dir:'prev'|'next'){
     const ni=dir==='next'?curIdx+1:curIdx-1;
     if(ni<0||ni>=allItems.length)return;
@@ -30,7 +27,6 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
     const it=store.getItems().find(i=>i.id===allItems[ni].id)||store.getColls().find(i=>i.id===allItems[ni].id);
     if(it){setItem(it);setImgIdx(0);}
   }
-
   if(!item)return null;
   const isColl=!!store.getColls().find(i=>i.id===item.id);
   const coll=isColl?(item as CollectionItem):null;
@@ -38,7 +34,6 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
   const priceUp=item.currentPrice&&item.currentPrice!==item.price;
   let days=0,diff=0,perDay=0;
   if(coll){days=Math.max(1,Math.round((Date.now()-new Date(coll.purchaseDate).getTime())/86400000));diff=coll.price-coll.purchasePrice;perDay=Math.round(coll.purchasePrice/days);}
-
   function confirmPU(){
     const p=parseInt(puPrice)||0;const today=new Date().toISOString().slice(0,10);
     const arr=store.getItems().find(i=>i.id===item!.id)?store.getItems():store.getColls();
@@ -55,7 +50,6 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
     const colls=store.getColls();colls.unshift(nc);items.splice(idx,1);
     store.saveItems(items);store.saveColls(colls);setColOpen(false);onUpdate();onClose();
   }
-
   function updatePriority(v:number){
     const arr=store.getItems().find(i=>i.id===item!.id)?store.getItems():store.getColls();
     const idx=arr.findIndex(i=>i.id===item!.id);if(idx===-1)return;
@@ -63,19 +57,16 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
     if(store.getItems().find(i=>i.id===arr[idx].id))store.saveItems(store.getItems());else store.saveColls(store.getColls());
     setItem({...item!,priority:v});onUpdate();
   }
-
   const td1:React.CSSProperties={color:'var(--t2)',fontSize:13,width:90,paddingTop:10,verticalAlign:'top'};
   const td2:React.CSSProperties={fontSize:13,color:'var(--t1)',lineHeight:1.6,paddingTop:10,paddingBottom:10};
   const TR:React.CSSProperties={borderBottom:'1px solid var(--border2)'};
   const LBL:React.CSSProperties={display:'block',fontSize:10,fontWeight:500,letterSpacing:'.13em',color:'var(--t2)',textTransform:'uppercase',marginBottom:6};
   const INP:React.CSSProperties={width:'100%',padding:'10px 12px',border:'1px solid var(--border)',borderRadius:10,background:'var(--surface)',fontSize:14};
-
   return(
     <>
     <div style={{position:'fixed',inset:0,zIndex:100,overflowY:'auto',display:'flex',flexDirection:'column',background:'var(--ivory)'}}
       onTouchStart={e=>{tx.current=e.touches[0].clientX;}}
       onTouchEnd={e=>{const dx=e.changedTouches[0].clientX-tx.current;if(Math.abs(dx)>60)navItem(dx<0?'next':'prev');}}>
-      {/* Image */}
       <div style={{position:'relative',background:'var(--ivory2)',flexShrink:0}}>
         {item.images.length?<img src={item.images[imgIdx]} alt={item.name} style={{width:'100%',aspectRatio:'1',objectFit:'cover',display:'block'}}/>
         :<div style={{width:'100%',aspectRatio:'1',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Cormorant Garamond,serif',fontSize:13,letterSpacing:'.18em',color:'var(--t3)'}}>NO IMAGE</div>}
@@ -108,8 +99,6 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
           </button>}
         </>}
       </div>
-
-      {/* Body */}
       <div style={{padding:'22px 20px 48px',flex:1}}>
         {isColl?(
           <>
@@ -139,12 +128,10 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
           <>
             <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:24,fontWeight:400,letterSpacing:'.02em',marginBottom:4}}>{item.brand}</div>
             <div style={{fontSize:14,color:'var(--t2)',marginBottom:14}}>{item.name}</div>
-            {/* Price - large serif */}
             <div style={{marginBottom:14}}>
               <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:34,fontWeight:300,letterSpacing:'.02em',color:'var(--t1)'}}>{fmt(item.currentPrice||item.price)}</div>
               {priceUp&&<div style={{fontSize:11,color:'var(--t3)',marginTop:2}}>登録時 {fmt(item.price)} <span style={{color:'#A05050'}}>+{fmt(item.currentPrice!-item.price)}</span></div>}
             </div>
-            {/* Star - always editable */}
             <div style={{marginBottom:18}}><StarRating value={item.priority} onChange={updatePriority} size={26}/></div>
             <div style={{borderTop:'1px solid var(--border2)',marginBottom:16}}/>
             <table style={{width:'100%',borderCollapse:'collapse',marginBottom:18}}><tbody>
@@ -156,14 +143,12 @@ export default function DetailView({itemId,onClose,onEdit,onUpdate,allItems=[]}:
             </tbody></table>
             <PriceChart history={item.priceHistory}/>
             <div style={{borderTop:'1px solid var(--border2)',margin:'18px 0'}}/>
-            {/* Slider then Memo */}
             <SliderButton label="→  Collection へ移動" onComplete={()=>{setCPrice('');setCDate(new Date().toISOString().slice(0,10));setColOpen(true);}}/>
             {item.memo&&<div style={{padding:'14px 16px',background:'var(--ivory2)',borderRadius:12,fontSize:13,lineHeight:1.8,marginTop:12}}>{item.memo}</div>}
           </>
         )}
       </div>
     </div>
-
     <Sheet open={puOpen} onClose={()=>setPuOpen(false)} title="現在価格を更新">
       <div style={{display:'flex',flexDirection:'column',gap:14,padding:'16px 20px 36px'}}>
         <input type="number" value={puPrice} onChange={e=>setPuPrice(e.target.value)} style={INP}/>

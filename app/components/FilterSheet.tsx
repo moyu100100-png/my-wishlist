@@ -10,7 +10,6 @@ export default function FilterSheet({open,onClose,current,onApply}:Props){
   const[allCats,setAllCats]=useState<string[]>([]);
   const[allColors,setAllColors]=useState<{hex:string;shimmer:boolean}[]>([]);
   const[allBrands,setAllBrands]=useState<string[]>([]);
-
   useEffect(()=>{
     if(!open)return;
     const safe={...defaultFilter,...current};
@@ -21,19 +20,16 @@ export default function FilterSheet({open,onClose,current,onApply}:Props){
     setAllColors(store.getColors().filter(c=>usedColors.includes(c.hex)));
     setAllBrands(store.getBrands().filter(b=>items.some(i=>i.brand===b)));
   },[open,current]);
-
   const safeCats=f?.cats??[];
   const safeColors=f?.colors??[];
   const safeBrands=f?.brands??[];
   const filteredItems=store.getItems().filter(i=>safeCats.length?safeCats.includes(i.cat):true);
   const availColors=[...new Set(filteredItems.map(i=>i.color))];
   const availBrands=[...new Set(filteredItems.map(i=>i.brand))];
-
   function tog<T>(a:T[],v:T):T[]{return a.includes(v)?a.filter(x=>x!==v):[...a,v];}
   const chip=(on:boolean,disabled=false):React.CSSProperties=>({border:on?'none':'1px solid var(--border)',borderRadius:20,padding:'6px 14px',fontSize:12,color:on?'#fff':disabled?'var(--t3)':'var(--t2)',background:on?'var(--brown)':disabled?'var(--ivory2)':'none',cursor:disabled?'not-allowed':'pointer',whiteSpace:'nowrap',opacity:disabled?.5:1});
   const ST:React.CSSProperties={fontSize:10,fontWeight:500,letterSpacing:'.14em',color:'var(--t3)',textTransform:'uppercase',marginBottom:12};
   const RI:React.CSSProperties={width:'100%',padding:'9px 10px',border:'1px solid var(--border)',borderRadius:10,background:'var(--surface)',fontSize:13};
-
   return(
     <Sheet open={open} onClose={onClose} title="フィルター"
       rightAction={<button onClick={()=>{const d=defaultFilter;setF(d);onApply(d);onClose();}} style={{fontSize:12,color:'var(--brown)',cursor:'pointer',background:'none',border:'none',padding:4}}>リセット</button>}>

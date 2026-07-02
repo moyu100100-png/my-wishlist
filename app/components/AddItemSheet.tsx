@@ -11,11 +11,9 @@ export default function AddItemSheet({open,onClose,editItem,onSave}:Props){
   const[color,setColor]=useState('');const[price,setPrice]=useState('');const[url,setUrl]=useState('');
   const[memo,setMemo]=useState('');const[priority,setPriority]=useState(3);const[images,setImages]=useState<string[]>([]);
   const[cats,setCats]=useState<string[]>([]);const[colors,setColors]=useState<ColorDef[]>([]);
-  const[brandSuggestions,setBrandSuggestions]=useState<string[]>([]);
-  const[showSugg,setShowSugg]=useState(false);
+  const[brandSugg,setBrandSugg]=useState<string[]>([]);const[showSugg,setShowSugg]=useState(false);
   const[cpOpen,setCpOpen]=useState(false);
   const fileRef=useRef<HTMLInputElement>(null);
-
   useEffect(()=>{
     if(open){
       setCats(store.getCats());setColors(store.getColors());
@@ -23,22 +21,14 @@ export default function AddItemSheet({open,onClose,editItem,onSave}:Props){
       else{setBrand('');setName('');setCat(store.getCats()[0]||'');setColor('');setPrice('');setUrl('');setMemo('');setPriority(3);setImages([]);}
     }
   },[open,editItem]);
-
-  function handleBrandChange(v:string){
+  function handleBrand(v:string){
     setBrand(v);
     const brands=store.getBrands();
-    if(v.trim()){const s=brands.filter(b=>b.toLowerCase().startsWith(v.toLowerCase())&&b!==v);setBrandSuggestions(s);setShowSugg(s.length>0);}
-    else{setShowSugg(false);}
+    if(v.trim()){const s=brands.filter(b=>b.toLowerCase().startsWith(v.toLowerCase())&&b!==v);setBrandSugg(s);setShowSugg(s.length>0);}
+    else setShowSugg(false);
   }
-
-  function addColor(hex:string,shimmer:boolean){
-    const n=[...colors,{hex,shimmer}];setColors(n);store.saveColors(n);
-  }
-
-  function handleFiles(e:React.ChangeEvent<HTMLInputElement>){
-    Array.from(e.target.files||[]).forEach(f=>{const r=new FileReader();r.onload=ev=>setImages(p=>[...p,ev.target?.result as string]);r.readAsDataURL(f);});e.target.value='';
-  }
-
+  function addColor(hex:string,shimmer:boolean){const n=[...colors,{hex,shimmer}];setColors(n);store.saveColors(n);}
+  function handleFiles(e:React.ChangeEvent<HTMLInputElement>){Array.from(e.target.files||[]).forEach(f=>{const r=new FileReader();r.onload=ev=>setImages(p=>[...p,ev.target?.result as string]);r.readAsDataURL(f);});e.target.value='';}
   function submit(){
     if(!brand.trim()||!name.trim()){alert('ブランドと商品名は必須です');return;}
     const data={brand:brand.trim(),name:name.trim(),cat:cat||cats[0],color,price:parseInt(price)||0,url:url.trim(),memo:memo.trim(),priority,images};
@@ -52,17 +42,13 @@ export default function AddItemSheet({open,onClose,editItem,onSave}:Props){
     }
     onSave();onClose();
   }
-
   const L:React.CSSProperties={display:'block',fontSize:10,fontWeight:500,letterSpacing:'.13em',color:'var(--t2)',textTransform:'uppercase',marginBottom:6};
   const I:React.CSSProperties={width:'100%',padding:'10px 12px',border:'1px solid var(--border)',borderRadius:10,background:'var(--surface)',fontSize:14};
-
   return(
     <>
     <Sheet open={open} onClose={onClose} title={editItem?'アイテムを編集':'アイテムを登録'}>
       <div style={{display:'flex',flexDirection:'column',gap:16,padding:'16px 20px 40px'}}>
         <input type="file" ref={fileRef} accept="image/*" multiple onChange={handleFiles} style={{display:'none'}}/>
-
-        {/* Image 3-slot */}
         <div>
           <label style={L}>画像</label>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8}}>
@@ -73,32 +59,22 @@ export default function AddItemSheet({open,onClose,editItem,onSave}:Props){
               </div>
             ))}
           </div>
-          {images.length>3&&<p style={{fontSize:11,color:'var(--t3)',marginTop:6}}>+ {images.length-3} 枚</p>}
         </div>
-
-        {/* Price first */}
         <div><label style={L}>価格（円）</label><input style={I} type="number" value={price} onChange={e=>setPrice(e.target.value)} placeholder="238000"/></div>
-
-        {/* Brand with suggestions */}
         <div style={{position:'relative'}}>
           <label style={L}>ブランド *</label>
-          <input style={I} value={brand} onChange={e=>handleBrandChange(e.target.value)} onBlur={()=>setTimeout(()=>setShowSugg(false),150)} placeholder="Cartier"/>
+          <input style={I} value={brand} onChange={e=>handleBrand(e.target.value)} onBlur={()=>setTimeout(()=>setShowSugg(false),150)} placeholder="Cartier"/>
           {showSugg&&<div style={{position:'absolute',top:'100%',left:0,right:0,background:'var(--surface)',border:'1px solid var(--border)',borderRadius:10,zIndex:10,boxShadow:'0 4px 12px rgba(0,0,0,.1)',overflow:'hidden'}}>
-            {brandSuggestions.map(b=><button key={b} onMouseDown={()=>{setBrand(b);setShowSugg(false);}} style={{width:'100%',padding:'10px 12px',textAlign:'left',fontSize:13,cursor:'pointer',borderBottom:'1px solid var(--border2)',background:'none'}}>{b}</button>)}
+            {brandSugg.map(b=><button key={b} onMouseDown={()=>{setBrand(b);setShowSugg(false);}} style={{width:'100%',padding:'10px 12px',textAlign:'left',fontSize:13,cursor:'pointer',borderBottom:'1px solid var(--border2)',background:'none'}}>{b}</button>)}
           </div>}
         </div>
-
         <div><label style={L}>商品名 *</label><input style={I} value={name} onChange={e=>setName(e.target.value)} placeholder="LOVE Ring"/></div>
-
-        {/* Category chips */}
         <div>
           <label style={L}>カテゴリ</label>
           <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
             {cats.map(c=><button key={c} onClick={()=>setCat(c)} style={{border:cat===c?'none':'1px solid var(--border)',borderRadius:20,padding:'6px 14px',fontSize:12,color:cat===c?'#fff':'var(--t2)',background:cat===c?'var(--brown)':'none',cursor:'pointer',whiteSpace:'nowrap'}}>{c}</button>)}
           </div>
         </div>
-
-        {/* Color swatches + add */}
         <div>
           <label style={L}>カラー</label>
           <div style={{display:'flex',flexWrap:'wrap',gap:8,alignItems:'center'}}>
@@ -108,11 +84,9 @@ export default function AddItemSheet({open,onClose,editItem,onSave}:Props){
             <button onClick={()=>setCpOpen(true)} style={{width:32,height:32,borderRadius:'50%',border:'1.5px dashed var(--brown-light)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',color:'var(--brown)',fontSize:20,background:'none',flexShrink:0}}>⊕</button>
           </div>
         </div>
-
         <div><label style={L}>Priority</label><StarRating value={priority} onChange={setPriority}/></div>
         <div><label style={L}>URL</label><input style={I} type="url" value={url} onChange={e=>setUrl(e.target.value)} placeholder="https://..."/></div>
         <div><label style={L}>Memo</label><textarea style={{...I,minHeight:72,resize:'vertical',lineHeight:1.7}} value={memo} onChange={e=>setMemo(e.target.value)} placeholder="30歳記念、昇進祝い…"/></div>
-
         <button onClick={submit} style={{width:'100%',padding:13,background:'var(--brown)',color:'#fff',borderRadius:24,fontSize:13,letterSpacing:'.07em',cursor:'pointer',border:'none'}}>{editItem?'更新する':'登録する'}</button>
         {editItem&&<button onClick={()=>{if(!confirm('削除しますか？'))return;store.saveItems(store.getItems().filter(i=>i.id!==editItem.id));store.saveColls(store.getColls().filter(i=>i.id!==editItem.id));onSave();onClose();}} style={{width:'100%',padding:12,background:'none',color:'#C0392B',border:'1px solid #C0392B',borderRadius:24,fontSize:13,cursor:'pointer'}}>削除する</button>}
       </div>
