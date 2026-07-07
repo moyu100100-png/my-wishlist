@@ -7,7 +7,6 @@ import SortSheet,{SortKey}from'./components/SortSheet';
 import AddItemSheet from'./components/AddItemSheet';
 import DetailView from'./components/DetailView';
 import SettingsSheet from'./components/SettingsSheet';
-import IconBtn from'./components/IconBtn';
 
 function applyFilter(items:WishItem[],f:FilterState,sort:SortKey):WishItem[]{
   if(!f)return items;
@@ -31,9 +30,20 @@ function applyFilter(items:WishItem[],f:FilterState,sort:SortKey):WishItem[]{
   return list;
 }
 
-const FilterIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:16,height:16}}><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>;
-const SortIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:16,height:16}}><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>;
-const SettingsIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:16,height:16}}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>;
+// SVG Icons
+const FilterIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{width:20,height:20}}>
+  <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+  <circle cx="8" cy="6" r="2" fill="var(--brown)" stroke="none"/><circle cx="16" cy="12" r="2" fill="var(--brown)" stroke="none"/><circle cx="10" cy="18" r="2" fill="var(--brown)" stroke="none"/>
+</svg>;
+const SortIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{width:20,height:20}}>
+  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/>
+</svg>;
+const SettingsIcon=()=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:20,height:20}}>
+  <circle cx="12" cy="12" r="3"/>
+  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+</svg>;
+
+const IB={width:36,height:36,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--brown)',background:'none',border:'none',cursor:'pointer'} as React.CSSProperties;
 
 export default function WishPage(){
   const[items,setItems]=useState<WishItem[]>([]);
@@ -47,39 +57,36 @@ export default function WishPage(){
   const[settingsOpen,setSettingsOpen]=useState(false);
   const reload=useCallback(()=>setItems(store.getItems()),[]);
   useEffect(()=>{reload();},[reload]);
-  const hasFilter=JSON.stringify(filter)!==JSON.stringify(defaultFilter);
   const displayed=applyFilter(items,filter,sort);
 
   return(
     <div style={{display:'flex',flexDirection:'column',height:'100dvh',background:'var(--bg)'}}>
-      <header style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'0 16px',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0,position:'sticky',top:0,zIndex:50}}>
+      {/* Row 1 */}
+      <header style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'0 16px',height:52,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
         <span style={{fontFamily:'Cormorant Garamond,serif',fontSize:26,fontWeight:400,letterSpacing:'.06em'}}>Wish List</span>
-        <div style={{display:'flex',gap:8,alignItems:'center'}}>
-          <button onClick={()=>{const q=prompt('検索：');if(q===null)return;}} style={{width:34,height:34,display:'flex',alignItems:'center',justifyContent:'center',borderRadius:10,background:'var(--surface)',border:'1px solid var(--border2)',boxShadow:'0 1px 4px rgba(160,135,106,.15)',cursor:'pointer',color:'var(--t2)'}}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{width:16,height:16}}><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-          </button>
-          <IconBtn onClick={()=>setSettingsOpen(true)} label="設定" size={34}><SettingsIcon/></IconBtn>
-        </div>
+        <button style={IB} onClick={()=>setSettingsOpen(true)}><SettingsIcon/></button>
       </header>
-      <div style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'8px 16px',display:'flex',gap:8,flexShrink:0}}>
-        <IconBtn onClick={()=>setFilterOpen(true)} active={hasFilter} label="フィルター" size={52}><FilterIcon/></IconBtn>
-        <IconBtn onClick={()=>setSortOpen(true)} label="並び替え" size={52}><SortIcon/></IconBtn>
+      {/* Row 2 */}
+      <div style={{background:'var(--ivory)',borderBottom:'1px solid var(--border2)',padding:'0 16px',height:40,display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
+        <span style={{fontSize:11,color:'var(--t3)'}}>{displayed.length} items</span>
+        <div style={{display:'flex',gap:4}}>
+          <button style={IB} onClick={()=>setFilterOpen(true)}><FilterIcon/></button>
+          <button style={IB} onClick={()=>setSortOpen(true)}><SortIcon/></button>
+        </div>
       </div>
-      <div style={{fontSize:11,color:'var(--t3)',padding:'6px 16px 4px',flexShrink:0}}>{displayed.length} items</div>
+
       <div style={{flex:1,overflowY:'auto'}}>
         {displayed.length===0?(
           <div style={{textAlign:'center',padding:'60px 20px',color:'var(--t3)'}}><p style={{fontSize:13,lineHeight:2.2}}>アイテムがありません。<br/>+ ボタンで追加しましょう。</p></div>
         ):(
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,padding:'4px 16px 100px'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,padding:'8px 16px 100px'}}>
             {displayed.map(item=>{
               const cp=item.currentPrice||item.price;
               const up=item.currentPrice&&item.currentPrice!==item.price;
               return(
-                <div key={item.id} onClick={()=>setDetailId(item.id)} style={{background:'var(--surface)',borderRadius:16,border:'1px solid var(--border2)',overflow:'hidden',cursor:'pointer',boxShadow:'0 1px 6px rgba(160,135,106,.08)'}}>
-                  <div style={{position:'relative',aspectRatio:'1',background:'var(--ivory2)',overflow:'hidden'}}>
-                    {item.images.length?<img src={item.images[0]} alt={item.name} style={{width:'100%',height:'100%',objectFit:'cover'}} loading="lazy"/>
-                    :<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Cormorant Garamond,serif',fontSize:11,letterSpacing:'.18em',color:'var(--t3)'}}>{item.brand.slice(0,3).toUpperCase()}</div>}
-                    {item.images.length>1&&<span style={{position:'absolute',bottom:7,right:7,background:'rgba(160,135,106,.55)',color:'#fff',fontSize:10,borderRadius:10,padding:'2px 7px'}}>1 / {item.images.length}</span>}
+                <div key={item.id} onClick={()=>setDetailId(item.id)} style={{background:'var(--surface)',borderRadius:16,border:'1px solid var(--border2)',overflow:'hidden',cursor:'pointer'}}>
+                  <div style={{aspectRatio:'1',background:'var(--ivory2)',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Cormorant Garamond,serif',fontSize:11,letterSpacing:'.18em',color:'var(--t3)'}}>
+                    {item.images.length?<img src={item.images[0]} alt={item.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>:item.brand.slice(0,3).toUpperCase()}
                   </div>
                   <div style={{padding:'10px 12px 14px'}}>
                     <div style={{fontSize:10,fontWeight:500,letterSpacing:'.14em',color:'var(--t2)',textTransform:'uppercase',marginBottom:3}}>{item.brand}</div>
