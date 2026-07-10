@@ -9,13 +9,16 @@ const tabs=[
   )},
   {href:'/collection',label:'COLLECTION',icon:(a:boolean)=>(
     <svg viewBox="0 0 24 24" fill={a?'var(--brown)':'none'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:22,height:22}} stroke={a?'var(--brown)':'var(--t3)'}>
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
     </svg>
   )},
   {href:'/boards',label:'BOARDS',icon:(a:boolean)=>(
     <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{width:22,height:22}} stroke={a?'var(--brown)':'var(--t3)'}>
-      <rect x="3" y="3" width="7" height="7" fill={a?'var(--brown)':'none'}/><rect x="14" y="3" width="7" height="7" fill={a?'var(--brown)':'none'}/>
-      <rect x="3" y="14" width="7" height="7" fill={a?'var(--brown)':'none'}/><rect x="14" y="14" width="7" height="7" fill={a?'var(--brown)':'none'}/>
+      <rect x="3" y="3" width="7" height="7" fill={a?'var(--brown)':'none'}/>
+      <rect x="14" y="3" width="7" height="7" fill={a?'var(--brown)':'none'}/>
+      <rect x="3" y="14" width="7" height="7" fill={a?'var(--brown)':'none'}/>
+      <rect x="14" y="14" width="7" height="7" fill={a?'var(--brown)':'none'}/>
     </svg>
   )},
 ];
