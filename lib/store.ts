@@ -9,6 +9,16 @@ export interface CollectionItem extends WishItem { purchasePrice: number; purcha
 export interface Board { id: string; title: string; layout: 1|2|4|9; itemIds: string[]; }
 export type Theme = 'ivory'|'greige'|'pink';
 
+export interface DisplaySettings {
+  wish: { price: boolean; currentPrice: boolean; priority: boolean; url: boolean; date: boolean; memo: boolean; };
+  collection: { purchaseDate: boolean; purchasePrice: boolean; price: boolean; diff: boolean; days: boolean; perDay: boolean; memo: boolean; };
+}
+
+const DEF_DISPLAY: DisplaySettings = {
+  wish: { price: true, currentPrice: true, priority: true, url: true, date: true, memo: true },
+  collection: { purchaseDate: true, purchasePrice: true, price: true, diff: true, days: true, perDay: true, memo: true },
+};
+
 function ld<T>(k:string,d:T):T { if(typeof window==='undefined')return d; try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;} }
 function sv<T>(k:string,v:T):void { if(typeof window==='undefined')return; try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
 export function uid():string { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
@@ -43,6 +53,8 @@ class Store {
   saveColors(c:ColorDef[]){ sv('wj_colors',c); }
   getTheme():Theme{ return ld('wj_theme','ivory'); }
   saveTheme(t:Theme){ sv('wj_theme',t); }
+  getDisplay():DisplaySettings{ return ld('wj_display',DEF_DISPLAY); }
+  saveDisplay(d:DisplaySettings){ sv('wj_display',d); }
   getBrands():string[]{
     const all=[...this.getItems(),...this.getColls()];
     return [...new Set(all.map(i=>i.brand))].filter(Boolean).sort();
